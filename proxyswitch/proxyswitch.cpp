@@ -102,21 +102,32 @@ bool SetUserEnvironmentVariable(const std::wstring& name, const std::wstring& va
         return false;
     }
 
-    // Set the environment variable in the registry
-    result = RegSetValueExW(
-        hKey,
-        name.c_str(),
-        0,
-        REG_SZ,
-        reinterpret_cast<const BYTE*>(value.c_str()),
-        static_cast<DWORD>((value.length() + 1) * sizeof(wchar_t))
-    );
+    // If value is empty, delete the environment variable
+    if (value.empty()) {
+        result = RegDeleteValueW(hKey, name.c_str());
+        RegCloseKey(hKey);
 
-    RegCloseKey(hKey);
+        if (result != ERROR_SUCCESS && result != ERROR_FILE_NOT_FOUND) {
+            std::wcerr << L"Failed to delete registry value. Error code: " << result << std::endl;
+            return false;
+        }
+    } else {
+        // Set the environment variable in the registry
+        result = RegSetValueExW(
+            hKey,
+            name.c_str(),
+            0,
+            REG_SZ,
+            reinterpret_cast<const BYTE*>(value.c_str()),
+            static_cast<DWORD>((value.length() + 1) * sizeof(wchar_t))
+        );
 
-    if (result != ERROR_SUCCESS) {
-        std::wcerr << L"Failed to set registry value. Error code: " << result << std::endl;
-        return false;
+        RegCloseKey(hKey);
+
+        if (result != ERROR_SUCCESS) {
+            std::wcerr << L"Failed to set registry value. Error code: " << result << std::endl;
+            return false;
+        }
     }
 
     // Broadcast WM_SETTINGCHANGE message to notify the system of the environment change

@@ -298,6 +298,7 @@ bool SetProxySettings(const std::wstring& proxyAddress, const std::wstring& prox
     bool success = true;
     success &= SetUserEnvironmentVariable(L"HTTP_PROXY", proxyUrl);
     success &= SetUserEnvironmentVariable(L"HTTPS_PROXY", proxyUrl);
+    success &= SetUserEnvironmentVariable(L"ALL_PROXY", proxyUrl);
     success &= SetWindowsInternetProxy(proxyServer);
     
     if (success) {
@@ -317,6 +318,7 @@ bool ClearProxySettings() {
     bool success = true;
     success &= SetUserEnvironmentVariable(L"HTTP_PROXY", L"");
     success &= SetUserEnvironmentVariable(L"HTTPS_PROXY", L"");
+    success &= SetWindowsInternetProxy(L"ALL_PROXY");
     success &= ClearWindowsInternetProxy();
     
     if (success) {

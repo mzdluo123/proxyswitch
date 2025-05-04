@@ -292,7 +292,7 @@ bool IsDoubleClickLaunch() {
 }
 
 bool SetProxySettings(const std::wstring& proxyAddress, const std::wstring& proxyPort) {
-    std::wstring proxyUrl = L"http://" + proxyAddress + L":" + proxyPort;
+    std::wstring proxyUrl = L"socks5://" + proxyAddress + L":" + proxyPort;
     std::wstring proxyServer = proxyAddress + L":" + proxyPort;
     
     bool success = true;
@@ -318,7 +318,7 @@ bool ClearProxySettings() {
     bool success = true;
     success &= SetUserEnvironmentVariable(L"HTTP_PROXY", L"");
     success &= SetUserEnvironmentVariable(L"HTTPS_PROXY", L"");
-    success &= SetWindowsInternetProxy(L"ALL_PROXY");
+    success &= SetUserEnvironmentVariable(L"ALL_PROXY",L"");
     success &= ClearWindowsInternetProxy();
     
     if (success) {

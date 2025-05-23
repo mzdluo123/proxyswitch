@@ -292,7 +292,7 @@ bool IsDoubleClickLaunch() {
 }
 
 bool SetProxySettings(const std::wstring& proxyAddress, const std::wstring& proxyPort) {
-    std::wstring proxyUrl = L"socks5://" + proxyAddress + L":" + proxyPort;
+    std::wstring proxyUrl = L"http://" + proxyAddress + L":" + proxyPort;
     std::wstring proxyServer = proxyAddress + L":" + proxyPort;
     
     bool success = true;
